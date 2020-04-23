@@ -73,7 +73,7 @@
 
   </div>
 
-  <div class="container">
+  <div class="container-fluid">
 
     {% if messages %}
     {% for message in messages %}
@@ -83,7 +83,16 @@
     {% endif %}
 
     {% block content %}
-    <p>Use this document as a way to quick start any new project.</p>
+    <p>Welcome to my quick social network demo. You may currently log in with user1/user2/user3 with the password 'password' without quotes. You'll find in the profile section, two lists. One is your current and
+      pending friends and the other is a list of all users to choose from. You can see your user/email information in the respective sections in the top right corner once you've logged in.</p>
+    <p>This demo was started from a cookie cutter created by <a href="https://github.com/pydanny/cookiecutter-django">PyDanny</a>. I have created a very straight forward barebones prototype of a social network. Registration and Login currently print any confirmation links to console <b>ONLY</b>. User must confirm email address before logging in.</p>
+    <p>Completely capable TODO's:
+      <ul>
+        <li>Leverage ModelManger/QuerySetManager to maintain relational functions (add/delete/approve)</li>
+        <li>Implment Celery/RabbitMQ to manage notifications of requests/messages.</li>
+        <li>Add Vue frontend and leverage Djangos restframework to serve all requests.</li>
+      </ul>
+    </p>
     {% endblock content %}
 
   </div> <!-- /container -->

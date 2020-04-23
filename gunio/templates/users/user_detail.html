@@ -7,73 +7,134 @@
 
 {% if object == request.user %}
 
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <h2><img src="/media/{{ user.profile_image }}" width="42" height="42" class="rounded-circle" />
-        {{ user.username }}</h2>
-    </div>
-    <div class="col" style="text-align: right; margin-top: 5px">
-      <!-- Action buttons -->
-      <a class="btn btn-primary" href="{% url 'users:update' %}" role="button">My Info</a>
-      <a class="btn btn-primary" href="{% url 'account_email' %}" role="button">E-Mail</a>
-      <!-- End Action buttons -->
-    </div>
+
+<div class="row">
+  <div class="col">
+    <h2><img src="/media/{{ user.profile_image }}" width="42" height="42" class="rounded-circle" />
+      {{ user.username }}</h2>
   </div>
-  <div class="row">
-    <div class="col">
-      <hr /><br /><br /></div>
+  <div class="col" style="text-align: right; margin-top: 5px">
+    <!-- Action buttons -->
+    <a class="btn btn-primary" href="{% url 'users:update' %}" role="button">My Info</a>
+    <a class="btn btn-primary" href="{% url 'account_email' %}" role="button">E-Mail</a>
+    <!-- End Action buttons -->
   </div>
-  <div class="row">
-    <div class="col">
-      <h4>My Friends</h4>
-      <table class="table">
-        <tr>
-          <td></td>
-          <td>UserName</td>
-          <td>Name</td>
-          <td>Friends Since</td>
-          <td>Actions</td>
-        </tr>
-        {% for friend in object.get_friends %}
-        <tr>
-          <td><img src="/media/{{ friend.friend.profile_image }}" width="42" height="42" class="rounded-circle" /></td>
-          <td>{{ friend.friend.username }}</td>
-          <td>{{ friend.friend.first_name }} {{ friend.friend.last_name }}</td>
-          <td>{{ friend.created|timesince }}</td>
-          <td>
-            <a class="btn btn-info btn-sm" href="mailto:{{ friend.friend.email }}" role="button">E-Mail</a>
-          </td>
-        </tr>
-        {% endfor %}
-
-      </table>
-    </div>
-    <div class="col">
-      <h4>All Users</h4>
-      <table class="table">
-        <tr>
-          <td></td>
-          <td>UserName</td>
-          <td>Name</td>
-          <td>Actions</td>
-        </tr>
-        {% for user in object.get_all_users %}
-        <tr>
-          <td><img src="/media/{{ user.profile_image }}" width="42" height="42" class="rounded-circle" /></td>
-          <td>{{ user.username }} {% if user.username == object.username %}<small>(ME)</small>{% endif %}</td>
-          <td>{{ user.first_name }} {{ user.last_name }}</td>
-          <td></td>
-        </tr>
-        {% endfor %}
-
-      </table>
-    </div>
-  </div>
-
-
-  {% endif %}
-
-
 </div>
+<div class="container">
+<div class="row">
+  <div class="col">
+    <p>Welcome to my quick social network demo. You'll find in the profile section, two lists. One is your current and
+      pending friends and the other is a list of all users to choose from. You can see your user/email information in the respective sections in the top right corner once you've logged in.</p>
+      
+    <p>This demo was begun from a cookie cutter created by <a href="https://github.com/pydanny/cookiecutter-django">PyDanny</a>. I have created a very straight forward barebones prototype. Registration and Login currently print any confirmation links to console <b>ONLY</b>.</p>
+  </div>
+</div>
+</div>
+<div class="row">
+  <div class="col">
+    <h4>My Friends</h4>
+    <table class="table">
+      <tr>
+        <td></td>
+        <td>UserName</td>
+        <td>Name</td>
+        <td>Friends Since</td>
+        <td>Actions</td>
+      </tr>
+      {% for friend in object.get_friends %}
+
+      {% if object.username == friend.creator.username %}
+      <tr>
+        <td><img src="/media/{{ friend.friend.profile_image }}" width="42" height="42" class="rounded-circle" /></td>
+        <td>{{ friend.friend.username }}</td>
+        <td>{{ friend.friend.first_name }} {{ friend.friend.last_name }}</td>
+        <td>{{ friend.approved|timesince }}</td>
+        <td>
+
+          {% if friend.status != "declined" %}
+            <form action="{% url 'users:delete_view' pk=friend.pk %}" method="POST" style="display: inline;">
+              {% csrf_token %}
+              <input class="btn btn-default btn-danger" type="submit" value="X" />
+            </form>
+          {% endif %}
+
+          {% if friend.status == "pending" %}
+            {% if object.username == friend.creator.username %}
+              <button class="btn btn-secondary btn-sm">Pending</button>
+            {% else %}
+              <form action="{% url 'users:approve_view' friend.id %}" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <input class="btn btn-default btn-success" type="submit" value="√" />
+              </form>
+            {% endif %}
+          {% endif %}
+
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td><img src="/media/{{ friend.creator.profile_image }}" width="42" height="42" class="rounded-circle" /></td>
+        <td>{{ friend.creator.username }}</td>
+        <td>{{ friend.creator.first_name }} {{ friend.creator.last_name }}</td>
+        <td>{{ friend.approved|timesince }}</td>
+        <td>
+
+          {% if friend.status != "declined" %}
+            <form action="{% url 'users:delete_view' pk=friend.pk %}" method="POST" style="display: inline;">
+              {% csrf_token %}
+              <input class="btn btn-default btn-danger" type="submit" value="X" />
+            </form>
+          {% endif %}
+
+          {% if friend.status == "pending" %}
+            {% if object.username == friend.creator.username %}
+              <button class="btn btn-secondary btn-sm">Pending</button>
+            {% else %}
+              <form action="{% url 'users:approve_view' friend.id %}" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <input class="btn btn-default btn-success" type="submit" value="√" />
+              </form>
+            {% endif %}
+          {% endif %}
+
+        </td>
+      </tr>
+      {% endif %}
+
+      {% endfor %}
+
+    </table>
+  </div>
+  <div class="col">
+    <h4>All Users</h4>
+    <table class="table">
+      <tr>
+        <td></td>
+        <td>UserName</td>
+        <td>Name</td>
+        <td>Actions</td>
+      </tr>
+      {% for user in object.get_all_users %}
+      <tr>
+        <td><img src="/media/{{ user.profile_image }}" width="42" height="42" class="rounded-circle" /></td>
+        <td>{{ user.username }} {% if user.username == object.username %}<small>(ME)</small>{% endif %}</td>
+        <td>{{ user.first_name }} {{ user.last_name }}</td>
+        <td>
+          {% if user.username != object.username %}
+          <form action="{% url 'users:add_view' user.id %}" method="POST">
+            {% csrf_token %}
+            <input class="btn btn-default btn-success" type="submit" value="+" />
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+
+    </table>
+  </div>
+</div>
+
+
+{% endif %}
+
 {% endblock content %}
