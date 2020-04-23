@@ -3,9 +3,6 @@ GunIO
 
 GunIO Interview Application
 
-.. image:: https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg
-     :target: https://github.com/pydanny/cookiecutter-django/
-     :alt: Built with Cookiecutter Django
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
      :target: https://github.com/ambv/black
      :alt: Black code style
@@ -13,16 +10,14 @@ GunIO Interview Application
 
 :License: MIT
 
+Installing
+^^^^^^
 
-Settings
---------
-
-Moved to settings_.
-
-.. _settings: http://cookiecutter-django.readthedocs.io/en/latest/settings.html
-
-Basic Commands
---------------
+* Python3 -m venv .venv
+* source .venv/bin/activate
+* source .env
+* pip3 install -r requirements/local.txt
+* python3 manage.py runserver
 
 Setting Up Your Users
 ^^^^^^^^^^^^^^^^^^^^^
