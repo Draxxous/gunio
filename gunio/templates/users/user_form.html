@@ -4,14 +4,25 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block content %}
-  <h1>{{ user.username }}</h1>
-  <form class="form-horizontal" method="post" action="{% url 'users:update' %}">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <div class="control-group">
-      <div class="controls">
-        <button type="submit" class="btn btn-primary">Update</button>
-      </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h2><img src="/media/{{ user.profile_image }}" width="42" height="42" class="rounded-circle" />
+        {{ user.username }}</h2>
+      <hr />
+      <form class="form-horizontal" method="post" enctype="multipart/form-data" action="{% url 'users:update' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="control-group">
+          <hr />
+          <div class="controls">
+            <a class="btn btn-secondary" href="javascript:history.back()">Cancle</a></button>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </div>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
+</div>
 {% endblock %}

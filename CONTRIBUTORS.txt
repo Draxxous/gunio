@@ -1,1 +1,2 @@
 Jay Hersh
+PyDanny CookieCutter: https://github.com/pydanny/cookiecutter-django
